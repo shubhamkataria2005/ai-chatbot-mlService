@@ -1,0 +1,33 @@
+# render.yaml - Deploy configuration for ML Services
+services:
+  # Car Recognition ML Service
+  - type: web
+    name: car-recognition-ml
+    runtime: python
+    repo: https://github.com/shubhamkataria2005/ai-chatbot-mlService
+    branch: main
+    buildCommand: |
+      pip install -r car_recognition/requirements.txt
+      python download_models.py
+    startCommand: cd car_recognition && gunicorn server:app
+    envVars:
+      - key: PORT
+        value: 5002
+    healthCheckPath: /health
+    plan: free
+
+  # Trade-In ML Service
+  - type: web
+    name: tradein-ml
+    runtime: python
+    repo: https://github.com/shubhamkataria2005/ai-chatbot-mlService
+    branch: main
+    buildCommand: |
+      pip install -r tradein_model/requirements.txt
+      python download_models.py
+    startCommand: cd tradein_model && gunicorn server:app
+    envVars:
+      - key: PORT
+        value: 5003
+    healthCheckPath: /health
+    plan: free
